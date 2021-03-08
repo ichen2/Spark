@@ -1,20 +1,17 @@
 package com.example.spark;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
-
-import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.Image;
-import com.spotify.protocol.types.PlayerState;
 import com.spotify.protocol.types.Track;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView mSongNameText;
     private ImageView mAlbumCoverImage;
+    private TextView mArtistNameText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mSongNameText = (TextView) findViewById(R.id.tv_song_name);
         mAlbumCoverImage = (ImageView) findViewById(R.id.iv_album_cover);
+        mArtistNameText = (TextView) findViewById(R.id.tv_artist_name);
     }
 
     @Override
@@ -73,12 +72,14 @@ public class MainActivity extends AppCompatActivity {
                     if (track != null) {
                         Log.d("MainActivity", track.name + " by " + track.artist.name);
                         mSongNameText.setText(track.name);
+                        mArtistNameText.setText(track.artist.name);
                         mSpotifyAppRemote
                                 .getImagesApi()
                                 .getImage(playerState.track.imageUri, Image.Dimension.LARGE)
                                 .setResultCallback(
                                         bitmap -> {
                                             mAlbumCoverImage.setImageBitmap(bitmap);
+                                            mAlbumCoverImage.setVisibility(View.VISIBLE);
                                         });
                         //Glide.with(this).load(track.imageUri).into(mAlbumCoverImage);
                     }
